@@ -34,12 +34,6 @@ pub enum Derive {
     /// Generate 'Clone' code for the generated structures.
     Clone,
 
-    /// Generate 'serde::Serialize' code for the generated structures.
-    Serialize,
-
-    /// Generate 'serde::Deserialize' code for the generated structures.
-    Deserialize,
-
     /// Generate `Eq` code for the generated structures.
     Eq,
 
@@ -244,6 +238,8 @@ impl Generator {
         let token_string = tokens.join(",");
 
         let derive_token_string = format!("#[derive({})]\n", token_string);
+        let auto_serde = "#[cfg_attr(feature = \"serde_support\", derive(Serialize, Deserialize))]"
+        let derive_with_serde = format!("{}\n{}", derive_token_string, auto_serde);
         let derive_token_stream: TokenStream = derive_token_string.parse().unwrap();
         derive_token_stream
     }
