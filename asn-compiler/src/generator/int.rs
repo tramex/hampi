@@ -66,8 +66,6 @@ lazy_static! {
         let mut m = HashMap::new();
         m.insert(Derive::Debug, "Debug".to_string());
         m.insert(Derive::Clone, "Clone".to_string());
-        m.insert(Derive::Serialize, "serde::Serialize".to_string());
-        m.insert(Derive::Deserialize, "serde::Deserialize".to_string());
         m.insert(Derive::Eq, "Eq".to_string());
         m.insert(Derive::PartialEq, "PartialEq".to_string());
         m
@@ -238,9 +236,9 @@ impl Generator {
         let token_string = tokens.join(",");
 
         let derive_token_string = format!("#[derive({})]\n", token_string);
-        let auto_serde = "#[cfg_attr(feature = \"serde_support\", derive(Serialize, Deserialize))]"
+        let auto_serde = "#[cfg_attr(feature = \"serde_support\", derive(serde::Serialize, serde::Deserialize))]";
         let derive_with_serde = format!("{}\n{}", derive_token_string, auto_serde);
-        let derive_token_stream: TokenStream = derive_token_string.parse().unwrap();
+        let derive_token_stream: TokenStream = derive_with_serde.parse().unwrap();
         derive_token_stream
     }
 }
